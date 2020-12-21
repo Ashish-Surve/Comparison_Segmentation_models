@@ -1,0 +1,9 @@
+# backend/requirements.txt
+
+fastapi
+numpy
+opencv-python
+pillow
+python-multipart
+uvicorn
+

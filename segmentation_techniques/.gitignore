@@ -1,0 +1,9 @@
+**/.vscode
+style-transfer/
+**/__pycache__
+*.png
+*.jpg
+*/models/
+storage/
+venv/
+env/
