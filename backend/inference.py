@@ -222,24 +222,30 @@ def get_preprocessing(preprocessing_fn):
     ]
     return A.Compose(_transform)
 
-def inference(model, image):
+def inference(model_name, image_folder_path):
     # wrap our image inside the Dataset wrapper used for training,
     # TODO: remove this and add custom pipeline for preprocessing.
 
     trial_dataset = Dataset(
-    r"segmentation_techniques\backend\trial_dataset", 
-    r"segmentation_techniques\backend\trial_dataset", 
+    image_folder_path, 
+    image_folder_path, 
     classes=CLASSES, 
     augmentation=get_validation_augmentation(),
     preprocessing=get_preprocessing(preprocess_input),
     )
 
     # configure and load model
-    model = config.STYLES["Unet"]
-    model_name = f"{config.MODEL_PATH}{model}.h5"
+    model_c = config.STYLES[model_name]
+    model_path = f"{config.MODEL_PATH}{model_c}.h5"
     print(model_name)
-    model = sm.Unet(BACKBONE, classes=n_classes, activation=activation)
-    model.load_weights(model_name) 
+    if model_name=="unet":
+        model = sm.Unet(BACKBONE, classes=n_classes, activation=activation)
+    elif model_name=="featurepyramidnetwork":
+        model = sm.FPN(BACKBONE, classes=n_classes, activation=activation)
+    elif model_name=="linknet":
+        model = sm.Linknet(BACKBONE, classes=n_classes, activation=activation)
+            
+    model.load_weights(model_path) 
 
     # trial folder must have only one image. hence the [0]
     image, gt_mask = trial_dataset[0]
@@ -259,9 +265,5 @@ def inference(model, image):
 
 
 
-
-
-
-
 if __name__=="__main__":
-    inference("unet","test.png")
+    inference("featurepyramidnetwork",r"backend\trial_dataset")
