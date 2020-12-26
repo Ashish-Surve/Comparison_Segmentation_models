@@ -13,7 +13,7 @@ STYLES = {
 
 st.set_option("deprecation.showfileUploaderEncoding", False)
 
-st.title("Image Segmentation Tool web app")
+st.title("Image Segmentation Tool")
 
 image = st.file_uploader("Choose an image")
 
@@ -31,17 +31,3 @@ if st.button("Find Car!"):
         displayed = 1
         total = len(STYLES)
 
-        st.write("Generating other models...")
-
-        while displayed < total:
-            for style in STYLES:
-                if style not in displayed_styles:
-                    try:
-                        path = f"{img_path.get('name').split('.')[0]}_{STYLES[style]}.jpg"
-                        image = Image.open(path)
-                        st.image(image, width=500)
-                        time.sleep(1)
-                        displayed += 1
-                        displayed_styles.append(style)
-                    except:
-                        pass
