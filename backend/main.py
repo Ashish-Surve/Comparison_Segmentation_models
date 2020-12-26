@@ -15,10 +15,17 @@ from PIL import Image
 
 import config
 import inference
+import glob
+
 
 
 app = FastAPI()
 
+
+def cleanfolder():
+    files = glob.glob(os.path.join(os.path.sep,f"{config.IMAGE_PATH}","*"))
+    for f in files:
+        os.remove(f)
 
 @app.get("/")
 def read_root():
@@ -32,6 +39,8 @@ async def combine_images(output, resized, name):
 
 @app.post("/{style}")
 async def get_image(style: str, file: UploadFile = File(...)):
+    # need the folder to be empty so that we can create a dataset with 1 image.
+    cleanfolder()
     image = np.array(Image.open(file.file))
     print(image.shape)
     image = cv2.resize(image, (480, 360),  interpolation = cv2.INTER_NEAREST) 
