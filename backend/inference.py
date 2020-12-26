@@ -11,6 +11,10 @@ import segmentation_models as sm
 import os
 import albumentations as A
 
+import glob
+
+
+
 # important constants
 #TODO:clean code later
 BACKBONE = 'efficientnetb3'
@@ -27,17 +31,17 @@ model_path = os.path.join(f"{config.MODEL_PATH}",f"{model_c}.h5")
 modelUnet.load_weights(model_path)
 print("Loaded Unet.")
 
-# modelFPN = sm.FPN(BACKBONE, classes=n_classes, activation=activation) 
-# model_c = config.STYLES["featurepyramidnetwork"]
-# model_path = f"{config.MODEL_PATH}{model_c}.h5"
-# modelFPN.load_weights(model_path)
-# print("Loaded FPN.")
+modelFPN = sm.FPN(BACKBONE, classes=n_classes, activation=activation) 
+model_c = config.STYLES["featurepyramidnetwork"]
+model_path = f"{config.MODEL_PATH}{model_c}.h5"
+modelFPN.load_weights(model_path)
+print("Loaded FPN.")
 
-# modelLinknet = sm.Linknet(BACKBONE, classes=n_classes, activation=activation)
-# model_c = config.STYLES["linknet"]
-# model_path = f"{config.MODEL_PATH}{model_c}.h5"
-# modelLinknet.load_weights(model_path)
-# print("Loaded Linknet.")
+modelLinknet = sm.Linknet(BACKBONE, classes=n_classes, activation=activation)
+model_c = config.STYLES["linknet"]
+model_path = f"{config.MODEL_PATH}{model_c}.h5"
+modelLinknet.load_weights(model_path)
+print("Loaded Linknet.")
 
 
 # below was the part of the pipline is used for training and preprocessing
@@ -244,9 +248,15 @@ def get_preprocessing(preprocessing_fn):
     return A.Compose(_transform)
 
 def inference(model_name, image_folder_path):
+    # TODO: Remove below folder empty code
+    # We need to create a folder for every image bcoz we need a placeholder
+    # for using the below Dataset Class.
+    files = glob.glob(os.path.join(os.path.sep,f"{config.IMAGE_PATH}","*"))
+    for f in files:
+        os.remove(f)
+
     # wrap our image inside the Dataset wrapper used for training,
     # TODO: remove this and add custom pipeline for preprocessing.
-
     trial_dataset = Dataset(
     image_folder_path, 
     image_folder_path, 
