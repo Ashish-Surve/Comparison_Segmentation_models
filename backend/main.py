@@ -4,6 +4,7 @@ import uuid
 from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 
+import os
 import cv2
 import uvicorn
 from fastapi import File
@@ -32,16 +33,17 @@ async def combine_images(output, resized, name):
 @app.post("/{style}")
 async def get_image(style: str, file: UploadFile = File(...)):
     image = np.array(Image.open(file.file))
-    print(f"{config.IMAGE_PATH}"+ "")
     print(image.shape)
     image = cv2.resize(image, (480, 360),  interpolation = cv2.INTER_NEAREST) 
     # PIL - BGR cv2 - RGB
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    cv2.imwrite(f"{config.IMAGE_PATH}"+ "something.jpg", image)
+    print(os.path.join(os.path.sep,f"{config.IMAGE_PATH}","something.jpg"))
+    # first sep for root since storage etc in root
+    cv2.imwrite(os.path.join(os.path.sep,f"{config.IMAGE_PATH}","something.jpg"), image)
     # model = config.STYLES[style]
     start = time.time()
-    output, resized = inference.inference(style, f"{config.IMAGE_PATH}")
-    name = f"storage2\{str(uuid.uuid4())}.png"
+    output, _ = inference.inference(style, os.path.join(os.path.sep,f"{config.IMAGE_PATH}",""))
+    name = os.path.join(os.path.sep, f"storage2",f"{str(uuid.uuid4())}.png")
     print(f"name: {name}")
     # name = file.file.filename
     output= output*255

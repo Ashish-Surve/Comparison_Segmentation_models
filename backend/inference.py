@@ -23,7 +23,7 @@ preprocess_input = sm.get_preprocessing(BACKBONE)
 print("Loading Models. This might take some time...")
 modelUnet = sm.Unet(BACKBONE, classes=n_classes, activation=activation)
 model_c = config.STYLES["unet"]
-model_path = f"{config.MODEL_PATH}{model_c}.h5"
+model_path = os.path.join(f"{config.MODEL_PATH}",f"{model_c}.h5")
 modelUnet.load_weights(model_path)
 print("Loaded Unet.")
 
@@ -255,9 +255,7 @@ def inference(model_name, image_folder_path):
     preprocessing=get_preprocessing(preprocess_input),
     )
 
-    # configure and load model
-    model_c = config.STYLES[model_name]
-    model_path = f"{config.MODEL_PATH}{model_c}.h5"
+
     print(model_name)
     if model_name=="unet":
         model = modelUnet
@@ -280,19 +278,19 @@ def inference(model_name, image_folder_path):
     pr_mask=pr_mask[..., 0].squeeze()
     # pr_mask = pr_mask[...,0][0]
     #print(final_image.shape)
-    print(gt_mask.shape)
-    print(pr_mask.shape)
-    print(image.shape)
+    # print(gt_mask.shape)
+    # print(pr_mask.shape)
+    # print(image.shape)
     # DEBUG: 
-    visualize(
-        image=image,
-        gt_mask=gt_mask,
-        pr_mask=pr_mask,
-    )
+    # visualize(
+    #     image=image,
+    #     gt_mask=gt_mask,
+    #     pr_mask=pr_mask,
+    # )
 
     return pr_mask,gt_mask
 
 
 
 if __name__=="__main__":
-    inference("featurepyramidnetwork",r"backend\trial_dataset")
+    pass

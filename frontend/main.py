@@ -19,10 +19,10 @@ image = st.file_uploader("Choose an image")
 
 style = st.selectbox("Choose the model", [i for i in STYLES.keys()])
 
-if st.button("Image Segmentation"):
+if st.button("Find Car!"):
     if image is not None and style is not None:
         files = {"file": image.getvalue()}
-        res = requests.post(f"http://127.0.0.1:8000/{style}", files=files)
+        res = requests.post(f"http://backend:8080/{style}", files=files)
         img_path = res.json()
         image = Image.open(img_path.get("name"))
         st.image(image)

@@ -9,9 +9,11 @@ services:
       - backend
     volumes:
         - ./storage:/storage
+        - ./storage2:/storage2
   backend:
     build: backend
     ports:
       - 8080:8080
     volumes:
       - ./storage:/storage
+      - ./storage2:/storage2

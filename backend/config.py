@@ -1,6 +1,6 @@
-MODEL_PATH = "models\\"
+MODEL_PATH = "models"
 
-IMAGE_PATH ="storage\\"
+IMAGE_PATH ="storage"
 
 STYLES = {
     "unet": "U-net-efficientnet",
