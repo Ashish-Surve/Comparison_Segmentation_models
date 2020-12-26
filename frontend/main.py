@@ -5,29 +5,24 @@ import streamlit as st
 from PIL import Image
 
 STYLES = {
-    "candy": "candy",
-    "composition 6": "composition_vii",
-    "feathers": "feathers",
-    "la_muse": "la_muse",
-    "mosaic": "mosaic",
-    "starry night": "starry_night",
-    "the scream": "the_scream",
-    "the wave": "the_wave",
-    "udnie": "udnie",
+    "unet": "U-net-efficientnet",
+    "featurepyramidnetwork": "FPN-efficientnet",
+    "linknet": "LinkedNet",
 }
+
 
 st.set_option("deprecation.showfileUploaderEncoding", False)
 
-st.title("Style transfer web app")
+st.title("Image Segmentation Tool web app")
 
 image = st.file_uploader("Choose an image")
 
-style = st.selectbox("Choose the style", [i for i in STYLES.keys()])
+style = st.selectbox("Choose the model", [i for i in STYLES.keys()])
 
-if st.button("Style Transfer"):
+if st.button("Image Segmentation"):
     if image is not None and style is not None:
         files = {"file": image.getvalue()}
-        res = requests.post(f"http://backend:8080/{style}", files=files)
+        res = requests.post(f"http://127.0.0.1:8000/{style}", files=files)
         img_path = res.json()
         image = Image.open(img_path.get("name"))
         st.image(image)

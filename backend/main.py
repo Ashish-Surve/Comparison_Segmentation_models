@@ -32,16 +32,25 @@ async def combine_images(output, resized, name):
 @app.post("/{style}")
 async def get_image(style: str, file: UploadFile = File(...)):
     image = np.array(Image.open(file.file))
-    model = config.STYLES[style]
+    print(f"{config.IMAGE_PATH}"+ "")
+    print(image.shape)
+    image = cv2.resize(image, (480, 360),  interpolation = cv2.INTER_NEAREST) 
+    # PIL - BGR cv2 - RGB
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    cv2.imwrite(f"{config.IMAGE_PATH}"+ "something.jpg", image)
+    # model = config.STYLES[style]
     start = time.time()
-    output, resized = inference.inference(model, image)
-    name = f"/storage/{str(uuid.uuid4())}.jpg"
+    output, resized = inference.inference(style, f"{config.IMAGE_PATH}")
+    name = f"storage2\{str(uuid.uuid4())}.png"
     print(f"name: {name}")
     # name = file.file.filename
+    output= output*255
+    output = output.astype('uint8')
+    #output = cv2.cvtColor(output, cv2.COLOR_GRAY2BGR)
     cv2.imwrite(name, output)
     models = config.STYLES.copy()
     del models[style]
-    asyncio.create_task(generate_remaining_models(models, image, name))
+    #asyncio.create_task(generate_remaining_models(models, image, name))
     return {"name": name, "time": time.time() - start}
 
 

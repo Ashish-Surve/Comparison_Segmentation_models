@@ -1,4 +1,6 @@
-MODEL_PATH = "backend\\models\\"
+MODEL_PATH = "models\\"
+
+IMAGE_PATH ="storage\\"
 
 STYLES = {
     "unet": "U-net-efficientnet",

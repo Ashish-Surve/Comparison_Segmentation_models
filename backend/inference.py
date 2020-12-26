@@ -12,14 +12,35 @@ import os
 import albumentations as A
 
 # important constants
-# TODO:clean code later
+#TODO:clean code later
 BACKBONE = 'efficientnetb3'
 CLASSES = ['car']
 n_classes = 1 if len(CLASSES) == 1 else (len(CLASSES) + 1)  # case for binary and multiclass segmentation
 activation = 'sigmoid' if n_classes == 1 else 'softmax'
 preprocess_input = sm.get_preprocessing(BACKBONE)
 
-# below was the part of the pipline i used for training.
+# models pre load
+print("Loading Models. This might take some time...")
+modelUnet = sm.Unet(BACKBONE, classes=n_classes, activation=activation)
+model_c = config.STYLES["unet"]
+model_path = f"{config.MODEL_PATH}{model_c}.h5"
+modelUnet.load_weights(model_path)
+print("Loaded Unet.")
+
+# modelFPN = sm.FPN(BACKBONE, classes=n_classes, activation=activation) 
+# model_c = config.STYLES["featurepyramidnetwork"]
+# model_path = f"{config.MODEL_PATH}{model_c}.h5"
+# modelFPN.load_weights(model_path)
+# print("Loaded FPN.")
+
+# modelLinknet = sm.Linknet(BACKBONE, classes=n_classes, activation=activation)
+# model_c = config.STYLES["linknet"]
+# model_path = f"{config.MODEL_PATH}{model_c}.h5"
+# modelLinknet.load_weights(model_path)
+# print("Loaded Linknet.")
+
+
+# below was the part of the pipline is used for training and preprocessing
 # TODO: Replace this pipeline with custom for faster inference.
 # helper function for data visualization
 def visualize(**images):
@@ -239,29 +260,37 @@ def inference(model_name, image_folder_path):
     model_path = f"{config.MODEL_PATH}{model_c}.h5"
     print(model_name)
     if model_name=="unet":
-        model = sm.Unet(BACKBONE, classes=n_classes, activation=activation)
+        model = modelUnet
     elif model_name=="featurepyramidnetwork":
-        model = sm.FPN(BACKBONE, classes=n_classes, activation=activation)
+        model = modelFPN
     elif model_name=="linknet":
-        model = sm.Linknet(BACKBONE, classes=n_classes, activation=activation)
+        model = modelLinknet
             
-    model.load_weights(model_path) 
+    # model.load_weights(model_path) 
 
     # trial folder must have only one image. hence the [0]
     image, gt_mask = trial_dataset[0]
     image = np.expand_dims(image, axis=0)
     pr_mask = model.predict(image).round()
+    #print(pr_mask.shape)
+    #print(pr_mask[0].shape)
+    # make image back to normal
+    image=denormalize(image.squeeze())
+    gt_mask=gt_mask[..., 0].squeeze()
+    pr_mask=pr_mask[..., 0].squeeze()
+    # pr_mask = pr_mask[...,0][0]
+    #print(final_image.shape)
+    print(gt_mask.shape)
     print(pr_mask.shape)
-    print(pr_mask[0].shape)
-    final_image = pr_mask[...,0][0]
-    print(final_image.shape)
-
+    print(image.shape)
     # DEBUG: 
-    plt.figure()
-    plt.imshow(final_image) 
-    plt.show()  # display it
+    visualize(
+        image=image,
+        gt_mask=gt_mask,
+        pr_mask=pr_mask,
+    )
 
-    return final_image,gt_mask
+    return pr_mask,gt_mask
 
 
 
