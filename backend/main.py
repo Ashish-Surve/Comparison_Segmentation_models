@@ -17,68 +17,59 @@ import config
 import inference
 import glob
 
-
+# Set this to 0 when building docker image.
+# Set 1 when debugging on own machine.
+#DEBUG variable
+DEBUG=0
 
 app = FastAPI()
 
-
-def cleanfolder():
-    files = glob.glob(os.path.join(os.path.sep,f"{config.IMAGE_PATH}","*"))
-    for f in files:
-        os.remove(f)
 
 @app.get("/")
 def read_root():
     return {"message": "Welcome from the API"}
 
 
-async def combine_images(output, resized, name):
-    final_image = np.hstack((output, resized))
-    cv2.imwrite(name, final_image)
-
 
 @app.post("/{style}")
 async def get_image(style: str, file: UploadFile = File(...)):
-    # need the folder to be empty so that we can create a dataset with 1 image.
-    cleanfolder()
     image = np.array(Image.open(file.file))
     print(image.shape)
     image = cv2.resize(image, (480, 360),  interpolation = cv2.INTER_NEAREST) 
     # PIL - BGR cv2 - RGB
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     print(os.path.join(os.path.sep,f"{config.IMAGE_PATH}","something.jpg"))
-    # first sep for root since storage etc in root
-    cv2.imwrite(os.path.join(os.path.sep,f"{config.IMAGE_PATH}","something.jpg"), image)
+    if DEBUG==1:
+        cv2.imwrite(os.path.join(f"{config.IMAGE_PATH}","something.jpg"), image)
+    else:    
+        # first sep for root since storage etc in root
+        cv2.imwrite(os.path.join(os.path.sep,f"{config.IMAGE_PATH}","something.jpg"), image)
     # model = config.STYLES[style]
     start = time.time()
-    output, _ = inference.inference(style, os.path.join(os.path.sep,f"{config.IMAGE_PATH}",""))
-    name = os.path.join(os.path.sep, f"storage2",f"{str(uuid.uuid4())}.png")
+    if DEBUG==1:
+        output, _ = inference.inference(style, os.path.join(f"{config.IMAGE_PATH}",""))
+    else:
+        output, _ = inference.inference(style, os.path.join(os.path.sep,f"{config.IMAGE_PATH}",""))
+    if DEBUG==1:
+        name = os.path.join(f"storage2",f"{str(uuid.uuid4())}.png")   
+    else:
+        name = os.path.join(os.path.sep, f"storage2",f"{str(uuid.uuid4())}.png")
     print(f"name: {name}")
     # name = file.file.filename
     output= output*255
     output = output.astype('uint8')
     #output = cv2.cvtColor(output, cv2.COLOR_GRAY2BGR)
     cv2.imwrite(name, output)
-    models = config.STYLES.copy()
-    del models[style]
-    #asyncio.create_task(generate_remaining_models(models, image, name))
+    # TODO: Remove below folder empty code
+    # We need to create a folder for every image bcoz we need a placeholder
+    # for using the below Dataset Class.
+    if DEBUG==1:
+        files = glob.glob(os.path.join(f"{config.IMAGE_PATH}","*"))   
+    else: 
+        files = glob.glob(os.path.join(os.path.sep,f"{config.IMAGE_PATH}","*"))
+    for f in files:
+        os.remove(f)
     return {"name": name, "time": time.time() - start}
-
-
-async def generate_remaining_models(models, image, name: str):
-    executor = ProcessPoolExecutor()
-    event_loop = asyncio.get_event_loop()
-    await event_loop.run_in_executor(
-        executor, partial(process_image, models, image, name)
-    )
-
-
-def process_image(models, image, name: str):
-    for model in models:
-        output, resized = inference.inference(models[model], image)
-        name = name.split(".")[0]
-        name = f"{name.split('_')[0]}_{models[model]}.jpg"
-        cv2.imwrite(name, output)
 
 
 if __name__ == "__main__":

@@ -23,7 +23,7 @@ n_classes = 1 if len(CLASSES) == 1 else (len(CLASSES) + 1)  # case for binary an
 activation = 'sigmoid' if n_classes == 1 else 'softmax'
 preprocess_input = sm.get_preprocessing(BACKBONE)
 
-# models pre load
+# models pre load for faster execution.
 print("Loading Models. This might take some time...")
 modelUnet = sm.Unet(BACKBONE, classes=n_classes, activation=activation)
 model_c = config.STYLES["unet"]
@@ -33,13 +33,13 @@ print("Loaded Unet.")
 
 modelFPN = sm.FPN(BACKBONE, classes=n_classes, activation=activation) 
 model_c = config.STYLES["featurepyramidnetwork"]
-model_path = f"{config.MODEL_PATH}{model_c}.h5"
+model_path = os.path.join(f"{config.MODEL_PATH}",f"{model_c}.h5")
 modelFPN.load_weights(model_path)
 print("Loaded FPN.")
 
 modelLinknet = sm.Linknet(BACKBONE, classes=n_classes, activation=activation)
 model_c = config.STYLES["linknet"]
-model_path = f"{config.MODEL_PATH}{model_c}.h5"
+model_path = os.path.join(f"{config.MODEL_PATH}",f"{model_c}.h5")
 modelLinknet.load_weights(model_path)
 print("Loaded Linknet.")
 
@@ -67,9 +67,7 @@ def denormalize(x):
     x = (x - x_min) / (x_max - x_min)
     x = x.clip(0, 1)
     return x
-
-def round_clip_0_1(x, **kwargs):
-    return x.round().clip(0, 1)    
+  
 
 # classes for data loading and preprocessing
 class Dataset:
@@ -139,89 +137,6 @@ class Dataset:
     def __len__(self):
         return len(self.ids)
     
-    
-class Dataloder(keras.utils.Sequence):
-    """Load data from dataset and form batches
-    
-    Args:
-        dataset: instance of Dataset class for image loading and preprocessing.
-        batch_size: Integet number of images in batch.
-        shuffle: Boolean, if `True` shuffle image indexes each epoch.
-    """
-    
-    def __init__(self, dataset, batch_size=1, shuffle=False):
-        self.dataset = dataset
-        self.batch_size = batch_size
-        self.shuffle = shuffle
-        self.indexes = np.arange(len(dataset))
-
-        self.on_epoch_end()
-
-    def __getitem__(self, i):
-        
-        # collect batch data
-        start = i * self.batch_size
-        stop = (i + 1) * self.batch_size
-        data = []
-        for j in range(start, stop):
-            data.append(self.dataset[j])
-        
-        # transpose list of lists
-        batch = [np.stack(samples, axis=0) for samples in zip(*data)]
-        
-        return batch
-    
-    def __len__(self):
-        """Denotes the number of batches per epoch"""
-        return len(self.indexes) // self.batch_size
-    
-    def on_epoch_end(self):
-        """Callback function to shuffle indexes each epoch"""
-        if self.shuffle:
-            self.indexes = np.random.permutation(self.indexes)  
-
-# define heavy augmentations
-def get_training_augmentation():
-    train_transform = [
-
-        A.HorizontalFlip(p=0.5),
-
-        A.ShiftScaleRotate(scale_limit=0.5, rotate_limit=0, shift_limit=0.1, p=1, border_mode=0),
-
-        A.PadIfNeeded(min_height=320, min_width=320, always_apply=True, border_mode=0),
-        A.RandomCrop(height=320, width=320, always_apply=True),
-
-        A.IAAAdditiveGaussianNoise(p=0.2),
-        A.IAAPerspective(p=0.5),
-
-        A.OneOf(
-            [
-                A.CLAHE(p=1),
-                A.RandomBrightness(p=1),
-                A.RandomGamma(p=1),
-            ],
-            p=0.9,
-        ),
-
-        A.OneOf(
-            [
-                A.IAASharpen(p=1),
-                A.Blur(blur_limit=3, p=1),
-                A.MotionBlur(blur_limit=3, p=1),
-            ],
-            p=0.9,
-        ),
-
-        A.OneOf(
-            [
-                A.RandomContrast(p=1),
-                A.HueSaturationValue(p=1),
-            ],
-            p=0.9,
-        ),
-        A.Lambda(mask=round_clip_0_1)
-    ]
-    return A.Compose(train_transform)
 
 
 def get_validation_augmentation():
@@ -248,13 +163,6 @@ def get_preprocessing(preprocessing_fn):
     return A.Compose(_transform)
 
 def inference(model_name, image_folder_path):
-    # TODO: Remove below folder empty code
-    # We need to create a folder for every image bcoz we need a placeholder
-    # for using the below Dataset Class.
-    files = glob.glob(os.path.join(os.path.sep,f"{config.IMAGE_PATH}","*"))
-    for f in files:
-        os.remove(f)
-
     # wrap our image inside the Dataset wrapper used for training,
     # TODO: remove this and add custom pipeline for preprocessing.
     trial_dataset = Dataset(
@@ -286,11 +194,7 @@ def inference(model_name, image_folder_path):
     image=denormalize(image.squeeze())
     gt_mask=gt_mask[..., 0].squeeze()
     pr_mask=pr_mask[..., 0].squeeze()
-    # pr_mask = pr_mask[...,0][0]
-    #print(final_image.shape)
-    # print(gt_mask.shape)
-    # print(pr_mask.shape)
-    # print(image.shape)
+  
     # DEBUG: 
     # visualize(
     #     image=image,
