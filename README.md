@@ -10,8 +10,8 @@ Tools used
 
 
 Folder Structure:
-
-Comparsion_Segmentation_models/
+```
+Comparsion_Segmentation_models/ 
     docker-                       compose.yml - for creating the containers and network in one go.
     backend/                      backend service that uses FASTAPI.
         config.py                 stores paths and dictionary for easy access.
@@ -32,5 +32,5 @@ Comparsion_Segmentation_models/
         requirements.txt
     storage/                      shared directory for storing uploaded image.
     storage2/                     shared directory for storing segmented image.
-    
+    ```
    
