@@ -1,4 +1,6 @@
 # Segmentation Comparision tool
+This tools helps us to compare diffrent segmentation models in small amount of time.
+
 Brief comparsion of segmentation models. Trained on collab for car/vehicle segmentation.
 
 Tools used
@@ -48,11 +50,44 @@ Comparsion_Segmentation_models/
 #### Output Unet efficientNet
 ![Outpu-Unet-efficientNet](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/output.jpeg)
 
-Compartive Analysis:
+
+## Training Information:
+### Compartive Analysis:
 | Model / Metric| Loss          | Mean-IoU  | Mean-f1   | 
 | ------------- |:-------------:| ---------:| ---------:|
 | U-net         | 0.6846        | 52.08 %   |  63.11 %  |
 | FPN           | 0.3300        | 68.33 %   |  77.37 %  |
 | LinkNet       | 0.9490        | 33.64 %   |  44.37 %  |
 
+
+#### gt mask= generated Mask / pr mask = Predicted Mask
+
+### Unet
+![Unet-graph](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/Unet.png)
+
+![Unet-1](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/Unet6.png)
+![Unet-2](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/unet3.png)
+![Unet-3](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/unet4.png)
+
+
+
+### FPN
+![FPN-graph](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/fpn1.png)
+
+![FPN-1](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/fpn3.png)
+![FPN-2](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/fpn4.png)
+![FPN-3](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/FPN.png)
+
+
+
+
+### LinkNet
+![LinkNet-graph](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/linkednet1.png)
+
+![LinkNet-1](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/linkednet3.png)
+![LinkNet-2](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/Linkednet4.png)
+![LinkNet-3](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/linkednet5.png)
+
+
+## We will soon be adding the collab notebook if someone needs it.
    
