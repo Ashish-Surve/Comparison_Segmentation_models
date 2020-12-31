@@ -48,5 +48,11 @@ Comparsion_Segmentation_models/
 #### Output Unet efficientNet
 ![Outpu-Unet-efficientNet](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/output.jpeg)
 
+Compartive Analysis:
+| Model / Metric| Loss          | Mean-IoU  | Mean-f1   | 
+| ------------- |:-------------:| ---------:| ---------:|
+| U-net         | 0.6846        | 52.08 %   |  63.11 %  |
+| FPN           | 0.3300        | 68.33 %   |  77.37 %  |
+| LinkNet       | 0.9490        | 33.64 %   |  44.37 %  |
 
    
