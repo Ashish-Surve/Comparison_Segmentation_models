@@ -10,39 +10,11 @@ Tools used
     Docker: to containerize the app
 
 
-
-Folder Structure:
-```
-Comparsion_Segmentation_models/ 
-    docker-                       compose.yml - for creating the containers and network in one go.
-    backend/                      backend service that uses FASTAPI.
-        config.py                 stores paths and dictionary for easy access.
-        Dockerfile                instructions on how to build backend container.
-        inference.py              does the inferencing for our segment models.
-        main.py                   FASTAPI based backend server.
-        requirements.txt          
-        Try_backend.ipynb         initial trial at training models(ignore)
-        try_code.ipynb            trial 2 at training models(ignore)
-        models/                   3 trained models for cars segmentation. 
-            FPN-efficientnet.h5
-            LinkedNet.h5
-            U-net-efficientnet.h5
-        storage/                  frontend saves files here(DEBUG purpose).
-    frontend/                     frontend that serves UI using streamlit.
-        Dockerfile                instructions on how to build frontend container.
-        main.py                   Streamlit based backend server.
-        requirements.txt
-    storage/                      shared directory for storing uploaded image.
-    storage2/                     shared directory for storing segmented image.
-```
-   ### TL;DR
-   1. execute 
-        ```docker-compose up -d```
-        in root of repository
-   2. open the http://localhost:8501/ or check the port of your frontend container using docker.
-
-
 ## Examples
+### Web Application
+<img src="https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/Streamlit.png" width="95%" />
+
+
 #### Initially created a model with 5 epochs => 5 minutes of training on collab at max capacity.
 #### Input / Output Unet efficientNet
 <p float="left">
@@ -86,6 +58,37 @@ Comparsion_Segmentation_models/
 ![LinkNet-1](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/linkednet3.png)
 ![LinkNet-2](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/Linkednet4.png)
 ![LinkNet-3](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/linkednet5.png)
+
+
+Folder Structure:
+```
+Comparsion_Segmentation_models/ 
+    docker-                       compose.yml - for creating the containers and network in one go.
+    backend/                      backend service that uses FASTAPI.
+        config.py                 stores paths and dictionary for easy access.
+        Dockerfile                instructions on how to build backend container.
+        inference.py              does the inferencing for our segment models.
+        main.py                   FASTAPI based backend server.
+        requirements.txt          
+        Try_backend.ipynb         initial trial at training models(ignore)
+        try_code.ipynb            trial 2 at training models(ignore)
+        models/                   3 trained models for cars segmentation. 
+            FPN-efficientnet.h5
+            LinkedNet.h5
+            U-net-efficientnet.h5
+        storage/                  frontend saves files here(DEBUG purpose).
+    frontend/                     frontend that serves UI using streamlit.
+        Dockerfile                instructions on how to build frontend container.
+        main.py                   Streamlit based backend server.
+        requirements.txt
+    storage/                      shared directory for storing uploaded image.
+    storage2/                     shared directory for storing segmented image.
+```
+   ### TL;DR
+   1. execute 
+        ```docker-compose up -d```
+        in root of repository
+   2. open the http://localhost:8501/ or check the port of your frontend container using docker.
 
 
 ## We will soon be adding the collab notebook if someone needs it.
