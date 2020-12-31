@@ -1,5 +1,5 @@
 # Segmentation Comparision tool
-This tools helps us to compare diffrent segmentation models in small amount of time.
+This tools helps us to compare different segmentation models. 
 
 Brief comparsion of segmentation models. Trained on collab for car/vehicle segmentation.
 
@@ -44,12 +44,11 @@ Comparsion_Segmentation_models/
 
 ## Examples
 #### Initially created a model with 5 epochs => 5 minutes of training on collab at max capacity.
-#### Input
-![Input image](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/input.png)
-
-#### Output Unet efficientNet
-![Outpu-Unet-efficientNet](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/output.jpeg)
-
+#### Input / Output Unet efficientNet
+<p float="left">
+<img src="https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/input.png" width="48%" /> 
+<img src="https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/output.jpeg" width="48%" />
+</p>
 
 ## Training Information:
 ### Compartive Analysis:
