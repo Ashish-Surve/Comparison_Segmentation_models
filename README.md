@@ -1,4 +1,4 @@
-# Segmentation
+# Segmentation Comparision tool
 Brief comparsion of segmentation models. Trained on collab for car/vehicle segmentation.
 
 Tools used
@@ -32,5 +32,21 @@ Comparsion_Segmentation_models/
         requirements.txt
     storage/                      shared directory for storing uploaded image.
     storage2/                     shared directory for storing segmented image.
-    ```
+```
+   ### TL;DR
+   1. execute 
+        ```docker-compose up -d```
+        in root of repository
+   2. open the http://localhost:8501/ or check the port of your frontend container using docker.
+
+
+## Examples
+#### Initially created a model with 5 epochs => 5 minutes of training on collab at max capacity.
+#### Input
+![Input image](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/input.png)
+
+#### Output Unet efficientNet
+![Outpu-Unet-efficientNet](https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/output.jpeg)
+
+
    
