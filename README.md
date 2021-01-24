@@ -9,7 +9,7 @@ Tools used
     streamlit : for the interface
     Docker: to containerize the app
 
-
+## <center> Every *star* will help me to gather motivation to make this project even more accesible to world. </center>
 ## Examples
 ### Web Application
 <img src="https://raw.githubusercontent.com/Ashish-Surve/Comparsion_Segmentation_models/main/images/Streamlit.png" width="95%" />
