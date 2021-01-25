@@ -1,4 +1,4 @@
-# Segmentation Comparision tool
+# Segmentation Comparison tool
 This tools helps us to compare different segmentation models. 
 
 Brief comparsion of segmentation models. Trained on collab for car/vehicle segmentation.
