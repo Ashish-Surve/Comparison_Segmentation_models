@@ -3,6 +3,8 @@ This tools helps us to compare different segmentation models.
 
 Brief comparsion of segmentation models. Trained on collab for car/vehicle segmentation.
 
+[Live Demo](https://share.streamlit.io/ashish-surve/segmentation_frontend/main/main.py)
+
 Tools used
 
     FastAPI: for the API
